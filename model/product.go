@@ -25,6 +25,8 @@ type Product struct {
 	ImgPath       string
 	Price         string
 	DiscountPrice string
+	ProductNum    int
+	ProductSales  int
 }
 
 // View 获取点击数

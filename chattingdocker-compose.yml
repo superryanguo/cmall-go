@@ -1,0 +1,57 @@
+version: '3.5'
+
+services:
+  dtredis:
+    image: redis:alpine
+    container_name: "dtredis"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    volumes:
+      - "./db/redis-data:/var/lib/redis"
+      - "./models/conf/redis.conf:/usr/local/etc/redis/redis.conf"
+    networks:
+      - node-net
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass sOmE_sEcUrE_pAsS
+
+  dtmysql:
+    image: mysql:5.7
+    restart: always
+    container_name: "dtmysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "yourpassword"
+      MYSQL_USER: 'test'
+      MYSQL_PASS: 'yourpassword'
+    volumes:
+      - "./db/mysql:/var/lib/mysql"
+      - "./models/conf/my.cnf:/etc/my.cnf"
+      - "./models/init:/docker-entrypoint-initdb.d/"
+      - "./models/testdata:/home"
+    networks:
+      - node-net
+    ports:
+      - "3306:3306"
+
+  aibrain:
+    image: gcr.io/kaggle-images/python:latest
+    #restart: always
+    container_name: "aibrain"
+    #environment:
+      #MYSQL_PASS: 'yourpassword'
+    volumes:
+      - "./brain/seq2seq/chat-keras:/tf"
+    networks:
+      - node-net
+    ports:
+      - "8099:8099"
+    command: bash -c "cd /tf && python ./chatbot.py"
+    #entrypoint: /tf/start.sh
+
+networks:
+  node-net:
+    name: node-net
+  outlet-net:
+    name: outlet-net
+  outlet-backend-net:
+    name: outlet-backend-net

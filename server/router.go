@@ -21,6 +21,7 @@ import (
 // NewRouter 路由配置
 func NewRouter() *gin.Engine {
 	r := gin.Default()
+    r.Static("/public/", "./public/")
 
 	r.Use(middleware.Cors())
 	store := cookie.NewStore([]byte(sdk.VERSION))

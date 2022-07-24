@@ -17,4 +17,5 @@ type ProductImg struct {
 	gorm.Model
 	ProductID uint
 	ImgPath   string
+	Intro     string
 }
