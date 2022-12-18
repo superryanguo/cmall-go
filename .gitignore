@@ -3,6 +3,7 @@
 *.swp
 .idea
 fabfile.py
+public
 go.sum
 debug
 runtime
