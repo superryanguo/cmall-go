@@ -1,0 +1,49 @@
+version: '3.5'
+
+services:
+  #cmall-api:
+    #build: ./
+    #image: cmall-api
+    #container_name: cmall-api 
+    #restart: always
+    #environment:
+      #MYSQL_DSN: "..."
+    #ports:
+      #- 3002:3000
+    #depends_on:
+      #- redis
+      #- mysql
+  mysql:
+    container_name: mysqlCmall
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "yourpassword"
+      MYSQL_USER: 'test'
+      MYSQL_PASS: 'yourpassword'
+      #MYSQL_DATABASE: ...
+    volumes:
+      - "./db/mysql:/var/lib/mysql"
+      - "./model/conf/my.cnf:/etc/my.cnf"
+      - "./model/init:/docker-entrypoint-initdb.d/"
+    ports:
+      - "3306:3306"
+  redis:
+    container_name: redisCmall
+    image: redis
+    restart: always
+    volumes:
+      - "./db/redis-data:/var/lib/redis"
+      - "./model/conf/redis.conf:/usr/local/etc/redis/redis.conf"
+      #- 容器卷名:/data
+    #networks:
+      #- node-net
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass sOmE_sEcUrE_pAsS
+
+#networks:
+  #node-net:
+    #name: node-net
+  #outlet-net:
+    #name: outlet-net
